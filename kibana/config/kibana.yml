@@ -1,0 +1,41 @@
+{
+  "visualization": {
+    "title": "Task Performance Dashboard",
+    "visualizations": [
+      {
+        "id": "task-duration-histogram",
+        "type": "histogram",
+        "params": {
+          "index_pattern": "trace-*",
+          "field": "StartTime",
+          "interval": "1h",
+          "color_schema": "Blue",
+          "title": "Task Duration Distribution"
+        }
+      },
+      {
+        "id": "operation-delay-analysis",
+        "type": "bar_chart",
+        "params": {
+          "index_pattern": "operation-*",
+          "aggs": [
+            {"type": "terms", "field": "OpName"},
+            {"type": "avg", "field": "AverageDelay"}
+          ],
+          "title": "Average Delay by Operation Type"
+        }
+      },
+      {
+        "id": "host-activity-pie",
+        "type": "pie_chart",
+        "params": {
+          "index_pattern": "event-*",
+          "aggs": [
+            {"type": "terms", "field": "HostName"}
+          ],
+          "title": "Event Distribution by Host"
+        }
+      }
+    ]
+  }
+}

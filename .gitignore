@@ -1,0 +1,16 @@
+# Ignore logs directory
+logs/
+logs/*
+
+# System files
+.DS_Store        # Mac system files
+Thumbs.db        # Windows thumbnail cache
+
+# IDE files
+.idea/           # IntelliJ
+.vscode/         # Visual Studio Code
+*.swp            # Vim swap files
+
+# Dependencies
+node_modules/    # Node.js dependencies
+venv/            # Python virtual environment
