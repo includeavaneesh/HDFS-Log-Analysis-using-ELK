@@ -6,8 +6,10 @@ services:
     environment:
       - node.name=es01
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es02,es03
-      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es02,es03,es04,es05
+      - cluster.initial_master_nodes=es01,es02,es03,es04,es05
+      - network.host=0.0.0.0
+      - discovery.zen.minimum_master_nodes=3
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=false
@@ -33,8 +35,10 @@ services:
     environment:
       - node.name=es02
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es03
-      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es01,es03,es04,es05
+      - cluster.initial_master_nodes=es01,es02,es03,es04,es05
+      - network.host=0.0.0.0
+      - discovery.zen.minimum_master_nodes=3
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=false
@@ -57,8 +61,10 @@ services:
     environment:
       - node.name=es03
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01,es02
-      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es01,es02,es04,es05
+      - cluster.initial_master_nodes=es01,es02,es03,es04,es05
+      - network.host=0.0.0.0
+      - discovery.zen.minimum_master_nodes=3
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - xpack.security.enabled=false
@@ -70,6 +76,59 @@ services:
       - data03:/usr/share/elasticsearch/data
     ports:
       - "9202:9200"
+    networks:
+      - elastic
+    depends_on:
+      - es01
+
+  es04:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    container_name: es04
+    environment:
+      - node.name=es04
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es02,es03,es05
+      - cluster.initial_master_nodes=es01,es02,es03,es04,es05
+      - network.host=0.0.0.0
+      - discovery.zen.minimum_master_nodes=3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data04:/usr/share/elasticsearch/data
+    ports:
+      - "9203:9200"
+    networks:
+      - elastic
+    depends_on:
+      - es01
+
+
+  es05:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    container_name: es05
+    environment:
+      - node.name=es05
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es02,es03,es04
+      - cluster.initial_master_nodes=es01,es02,es03,es04,es05
+      - network.host=0.0.0.0
+      - discovery.zen.minimum_master_nodes=3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data05:/usr/share/elasticsearch/data
+    ports:
+      - "9204:9200"
     networks:
       - elastic
     depends_on:
@@ -108,6 +167,8 @@ services:
       - es01
       - es02
       - es03
+      - es04
+      - es05
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5601"]
       interval: 30s
@@ -128,11 +189,15 @@ services:
       - es01
       - es02
       - es03
+      - es04
+      - es05
 
 volumes:
   data01:
   data02:
   data03:
+  data04:
+  data05:
 
 networks:
   elastic:
