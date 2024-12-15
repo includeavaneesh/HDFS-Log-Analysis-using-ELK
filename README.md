@@ -33,3 +33,6 @@ Start back the server
 ```
 docker-compose start es02
 ```
+
+# Link to the dataset:
+https://github.com/logpai/loghub/tree/master/HDFS#hdfs_v3_tracebench
